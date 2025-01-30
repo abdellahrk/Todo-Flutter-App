@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todo/screen/home.dart';
 import 'package:todo/widgets/appbar.dart';
+import 'package:todo/widgets/task_form.dart';
 
 import '../../model/task.dart';
 import '../../service/database.dart';
@@ -14,6 +15,7 @@ class _NewTask extends State<NewTask> {
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
   final database = MyDatabase();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
@@ -27,36 +29,7 @@ class _NewTask extends State<NewTask> {
     return Scaffold(
       appBar: CustomAppbar(title: 'New Task'),
       body: Container(
-        child: Center(
-          child: Expanded(
-              child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              TextFormField(
-                controller: titleController,
-              ),
-              TextFormField(
-                controller: descriptionController,
-              ),
-              ElevatedButton(
-                  onPressed: () {
-                    var snackBar = SnackBar(content: Text('Task Added!'));
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                    String title = titleController.text.toString();
-                    String description = descriptionController.text.toString();
-                    var task =
-                        Task(title: title, description: description, isDone: 1);
-                    database.insertTask(task);
-                    setState(() {
-                      // dataList = dataList;
-                    });
-                    titleController.clear();
-                    descriptionController.clear();
-                  },
-                  child: Text('Add'))
-            ],
-          )),
-        ),
+        child: Center(child: TaskForm()),
       ),
     );
   }

@@ -21,7 +21,6 @@ class TodoProvider extends ChangeNotifier {
     await database.markUnDone(taskId);
     getDoneTaks();
     getNotDoneTaks();
-    notifyListeners();
   }
 
   Future<List<Task>> getTasks() async {
@@ -46,6 +45,16 @@ class TodoProvider extends ChangeNotifier {
 
   void incrementCount() {
     _count++;
+    notifyListeners();
+  }
+
+  Future<void> addTodo(Task task) async {
+    await database.insertTask(task);
+    notifyListeners();
+  }
+
+  Future<void> deleteTask(int taskId) async {
+    await database.removeTask(taskId);
     notifyListeners();
   }
 }

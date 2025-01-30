@@ -93,4 +93,9 @@ class MyDatabase {
     await db
         .rawUpdate('UPDATE my_tasks SET isDone = ? WHERE id = ?', [0, taskId]);
   }
+
+  Future<void> removeTask(int taskId) async {
+    final db = await database();
+    await db.rawDelete('DELETE FROM my_tasks WHERE id = ?', [taskId]);
+  }
 }
