@@ -4,13 +4,20 @@ import 'package:sqflite/sqflite.dart';
 import '../model/task.dart';
 
 class MyDatabase {
-  static database() async {
+  _onUpgrade(Database database, int oldVersion, int version) async {
+    return database.execute(
+      "ALTER TABLE my_tasks ADD updatedAt INTEGER DEFAULT (cast(strftime('%s','now') as int",
+      // "ALTER TABLE my_tasks ADD updatedAt INTEGER DEFAULT (cast(strftime('%s','now') as int))"
+    );
+  }
+
+  database() async {
     final database =
         openDatabase(join(await getDatabasesPath(), 'my_task_db.db'),
-            onCreate: (Database db, int version) {
+            onCreate: (Database db, version) {
       return db.execute(
           "CREATE TABLE IF NOT EXISTS my_tasks(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, description TEXT, isDone INTEGER)");
-    }, version: 1);
+    }, onUpgrade: _onUpgrade, version: 1);
 
     return database;
   }
@@ -32,7 +39,7 @@ class MyDatabase {
             'id': id as int,
             'title': title as String,
             'description': description as String,
-            'isDone': isDone as int
+            'isDone': isDone as int,
           } in taskMaps)
         Task(id: id, title: title, description: description, isDone: isDone)
     ];
