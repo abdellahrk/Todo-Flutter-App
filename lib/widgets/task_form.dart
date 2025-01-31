@@ -62,9 +62,8 @@ class TaskFormState extends State<TaskForm> {
                   String title = titlecontroller.text.toString();
                   String description = descriptionController.text.toString();
                   var task =
-                      Task(title: title, description: description, isDone: 1);
+                      Task(title: title, description: description, isDone: 0);
                   context.read<TodoProvider>().addTodo(task);
-                  Navigator
                 },
                 child: const Text('Submit'))
           ],

@@ -48,6 +48,7 @@ class _HomeState extends State<Home> {
                   return CircularProgressIndicator();
                 case ConnectionState.done:
                   var data = snapshot.data;
+                  print(snapshot.data);
                   if (snapshot.hasData) {
                     return snapshot.data!.isEmpty
                         ? Text('no data yet')

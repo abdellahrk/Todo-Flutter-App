@@ -3,17 +3,17 @@ import 'package:todo/model/task.dart';
 import 'package:todo/service/database.dart';
 
 class TaskRepository {
-  final database = MyDatabase.database();
+  final instance = MyDatabase();
 
   void addTask(Task task) async {
-    final db = await database();
+    final db = await instance.database();
 
     await db.insert('my_tasks', task.toMap(),
         conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
   Future<List<Task>> tasks() async {
-    final db = await database();
+    final db = await instance.database();
 
     final List<Map<String, Object?>> taskMaps = await db.query('my_tasks');
 
@@ -29,7 +29,7 @@ class TaskRepository {
   }
 
   Future<dynamic> getTask(int id) async {
-    final db = await database();
+    final db = await instance.database();
 
     var result = await db.query('my_tasks', where: '"id" = ?', whereArgs: [id]);
 

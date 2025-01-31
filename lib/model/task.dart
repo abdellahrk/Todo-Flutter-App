@@ -3,6 +3,8 @@ class Task {
   late String title;
   late String description;
   late int isDone;
+  int? createdAt;
+  int? updatedAt;
 
   Task(
       {this.id,
@@ -15,7 +17,7 @@ class Task {
       'id': id,
       'title': title,
       'description': description,
-      'isDone': isDone,
+      'isDone': isDone
     };
   }
 
@@ -24,10 +26,12 @@ class Task {
     title = map['title'];
     description = map['description'];
     isDone = map['isDone'];
+    createdAt = map['createdAt'];
+    updatedAt = map['updatedAt'];
   }
 
   @override
   String toString() {
-    return 'Task: {$title, $description, $isDone} ';
+    return 'Task: {$title, $description, $isDone, $createdAt, $updatedAt} ';
   }
 }
