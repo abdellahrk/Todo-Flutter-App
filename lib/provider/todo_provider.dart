@@ -24,7 +24,9 @@ class TodoProvider extends ChangeNotifier {
   }
 
   Future<List<Task>> getTasks() async {
-    return await database.tasks();
+    List<Task> tasks = await database.tasks();
+    _count = tasks.length;
+    return tasks;
   }
 
   int get count => _count;

@@ -8,7 +8,7 @@ class TaskRepository {
   void addTask(Task task) async {
     final db = await instance.database();
 
-    await db.insert('my_tasks', task.toMap(),
+    await db.insert('my_tasks', task.toJson(),
         conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
@@ -22,7 +22,7 @@ class TaskRepository {
             'id': id as int,
             'title': title as String,
             'description': description as String,
-            'isDone': isDone as int
+            'isDone': int isDone as int
           } in taskMaps)
         Task(id: id, title: title, description: description, isDone: isDone)
     ];

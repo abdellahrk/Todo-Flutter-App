@@ -39,12 +39,12 @@ class _SingleTaskState extends State<SingleTask> {
               print(snapshot.error);
               return Text('error');
             }
-            var task = Task.fromMap(snapshot.data[0]);
+            var task = Task.fromJson(snapshot.data[0]);
 
             print(task.id);
             return Center(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                     task.title,
@@ -55,7 +55,8 @@ class _SingleTaskState extends State<SingleTask> {
                         fontWeight: FontWeight.bold),
                   ),
                   Text(task.description),
-                  Text(task.isDone == 0 ? 'False' : 'True')
+                  Text(task.isDone == 0 ? 'False' : 'True'),
+                  Text(task!.createdAt!),
                 ],
               ),
             );

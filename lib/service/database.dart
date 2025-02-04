@@ -4,35 +4,36 @@ import 'package:sqflite/sqflite.dart';
 import '../model/task.dart';
 
 class MyDatabase {
-  _onUpgrade(Database database, int oldVersion, int version) async {
-    return database.execute(
-      "ALTER TABLE my_tasks ADD updatedAt INTEGER DEFAULT (cast(strftime('%s','now') as int",
-      // "ALTER TABLE my_tasks ADD updatedAt INTEGER DEFAULT (cast(strftime('%s','now') as int))"
-    );
-  }
+  // _onUpgrade(Database database, int oldVersion, int version) async {
+  //   return database.rawQuery();
+  // }
 
   database() async {
-    final database =
-        openDatabase(join(await getDatabasesPath(), 'my_task_db.db'),
-            onCreate: (Database db, version) {
+    final database = openDatabase(join(await getDatabasesPath(), 'todo.db'),
+        onCreate: (Database db, version) {
       return db.execute(
-          "CREATE TABLE IF NOT EXISTS my_tasks(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, description TEXT, isDone INTEGER)");
-    }, onUpgrade: _onUpgrade, version: 1);
+          "CREATE TABLE IF NOT EXISTS tasks(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, description TEXT, isDone INTEGER, remind INTEGER, repeat STRING, color INTEGER, startTime STRING, endTime STRING,createdAt STRING, updatedAt STRING, date STRING, completedAt STRING)");
+    }, version: 15);
 
     return database;
+  }
+
+  Future<void> dropDatabase(String name) async {
+    final db = await database();
+    db.execute("DROP TABLE IF EXISTS $name");
   }
 
   Future<void> insertTask(Task task) async {
     final db = await database();
 
-    await db.insert('my_tasks', task.toMap(),
+    await db.insert('tasks', task.toJson(),
         conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
   Future<List<Task>> tasks() async {
     final db = await database();
 
-    final List<Map<String, Object?>> taskMaps = await db.query('my_tasks');
+    final List<Map<String, Object?>> taskMaps = await db.query('tasks');
 
     return [
       for (final {
@@ -49,7 +50,7 @@ class MyDatabase {
     final db = await database();
 
     final List<Map<String, Object?>> taskMaps =
-        await db.query('my_tasks', where: '"isDone" = ?', whereArgs: [1]);
+        await db.query('tasks', where: '"isDone" = ?', whereArgs: [1]);
 
     return [
       for (final {
@@ -66,7 +67,7 @@ class MyDatabase {
     final db = await database();
 
     final List<Map<String, Object?>> taskMaps =
-        await db.query('my_tasks', where: '"isDone" = ?', whereArgs: [0]);
+        await db.query('tasks', where: '"isDone" = ?', whereArgs: [0]);
 
     return [
       for (final {
@@ -82,7 +83,7 @@ class MyDatabase {
   Future<dynamic> getTask(int id) async {
     final db = await database();
 
-    var result = await db.query('my_tasks', where: '"id" = ?', whereArgs: [id]);
+    var result = await db.query('tasks', where: '"id" = ?', whereArgs: [id]);
 
     return result;
   }
@@ -90,15 +91,13 @@ class MyDatabase {
   Future<void> markDone(int taskId) async {
     final db = await database();
 
-    await db
-        .rawUpdate('UPDATE my_tasks SET isDone = ? WHERE id = ?', [1, taskId]);
+    await db.rawUpdate('UPDATE tasks SET isDone = ? WHERE id = ?', [1, taskId]);
   }
 
   Future<void> markUnDone(int taskId) async {
     final db = await database();
 
-    await db
-        .rawUpdate('UPDATE my_tasks SET isDone = ? WHERE id = ?', [0, taskId]);
+    await db.rawUpdate('UPDATE tasks SET isDone = ? WHERE id = ?', [0, taskId]);
   }
 
   Future<void> removeTask(int taskId) async {
