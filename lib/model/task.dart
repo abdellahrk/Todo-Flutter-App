@@ -1,37 +1,25 @@
-class Task {
-  int? id;
-  late String title;
-  late String description;
-  late int isDone;
-  int? createdAt;
-  int? updatedAt;
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:flutter/foundation.dart';
 
-  Task(
-      {this.id,
-      required this.title,
-      required this.description,
-      required this.isDone});
+part 'task.freezed.dart';
+part 'task.g.dart';
 
-  Map<String, Object?> toMap() {
-    return {
-      'id': id,
-      'title': title,
-      'description': description,
-      'isDone': isDone
-    };
-  }
+@freezed
+class Task with _$Task {
+  const factory Task(
+      {int? id,
+      required String title,
+      required String description,
+      required int isDone,
+      String? date,
+      String? startTime,
+      String? endTime,
+      int? color,
+      int? remind,
+      String? repeat,
+      String? completedAt,
+      String? createdAt,
+      String? updatedAt}) = _Task;
 
-  Task.fromMap(Map<String, dynamic> map) {
-    id = map['id'];
-    title = map['title'];
-    description = map['description'];
-    isDone = map['isDone'];
-    createdAt = map['createdAt'];
-    updatedAt = map['updatedAt'];
-  }
-
-  @override
-  String toString() {
-    return 'Task: {$title, $description, $isDone, $createdAt, $updatedAt} ';
-  }
+  factory Task.fromJson(Map<String, Object?> json) => _$TaskFromJson(json);
 }
